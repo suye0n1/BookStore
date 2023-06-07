@@ -3,6 +3,7 @@ package com.suyeon.bookstore.cart;
 import com.suyeon.bookstore.item.Item;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,4 +24,10 @@ public class CartItem {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
+
+    @Builder
+    private CartItem (Long cart_item_id, int count){
+        this.cart_item_id = cart_item_id;
+        this.count = count;
+    }
 }

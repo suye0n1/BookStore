@@ -1,10 +1,12 @@
 package com.suyeon.bookstore.item;
 
+import com.suyeon.bookstore.cart.CartItem;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,7 +28,15 @@ public class Item {
     private int price;
 
     @OneToMany(mappedBy = "item")
-    private List<Item> itemList = new ArrayList<>();
+    private List<CartItem> cartItemList = new ArrayList<>();
+
+    @Builder
+    private Item (Long item_id, String item_detail, String item_name, int price){
+        this.item_id = item_id;
+        this.item_detail = item_detail;
+        this.item_name = item_name;
+        this.price = price;
+    }
 
 
 }
