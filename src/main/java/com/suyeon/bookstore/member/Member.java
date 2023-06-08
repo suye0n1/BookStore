@@ -36,6 +36,7 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     private List<Orders> oderList = new ArrayList<>();
+
     @Builder
     public Member (Long id, String member_id,String passwd, String m_name, Address address){
         this.id = id;
