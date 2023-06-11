@@ -1,8 +1,10 @@
 package com.suyeon.bookstore.member;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,4 +28,5 @@ public class MemberService {
                 .build();
      return memberRepository.save(member);
     }
+
 }

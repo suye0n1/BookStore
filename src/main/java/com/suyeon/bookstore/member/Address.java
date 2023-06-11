@@ -7,6 +7,7 @@ import lombok.*;
 
 @Embeddable
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Address {
     @Column(length = 1024, nullable = false)

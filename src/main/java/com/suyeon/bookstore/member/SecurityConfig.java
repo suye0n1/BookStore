@@ -17,9 +17,14 @@ public class SecurityConfig{
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {   //인증되지 않은 요청 허락
         http.authorizeHttpRequests().requestMatchers(
-                        new AntPathRequestMatcher("/**")).permitAll()   //csrf 때문에 오류 발생
-                .and()  //403에러 처리
-                .csrf().disable();
+                        new AntPathRequestMatcher("/**")).permitAll()
+                .and()//csrf 검증 예외 처리
+                .csrf().ignoringRequestMatchers(
+                        new AntPathRequestMatcher("/h2-console/**"))
+                .and()//오류 발생 방지
+                .headers()
+                .addHeaderWriter(new XFrameOptionsHeaderWriter(
+                        XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN));
 
         return http.build();
     }
