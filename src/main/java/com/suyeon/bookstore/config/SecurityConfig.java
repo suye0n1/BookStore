@@ -1,4 +1,4 @@
-package com.suyeon.bookstore.member;
+package com.suyeon.bookstore.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

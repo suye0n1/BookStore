@@ -1,4 +1,4 @@
-package com.suyeon.bookstore.member;
+package com.suyeon.bookstore.member.entity;
 
 
 import jakarta.persistence.Column;
@@ -11,7 +11,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Address {
     @Column(length = 1024, nullable = false)
-    private String adr;  //주소
-    private String adr_detail; //상세 주소
+    private String address;  //주소
+    private String addressDetail; //상세 주소
     private String zipCode; //우편번호
 }

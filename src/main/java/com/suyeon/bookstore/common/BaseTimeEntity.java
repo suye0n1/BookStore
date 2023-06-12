@@ -1,4 +1,4 @@
-package com.suyeon.bookstore.order;
+package com.suyeon.bookstore.common;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
