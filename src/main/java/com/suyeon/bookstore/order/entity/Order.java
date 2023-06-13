@@ -11,11 +11,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+@Table(name = "orders")
 public class Order extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "orderId")
+    @Column(name = "order_id")
     private Long orderId;
 
     @ManyToOne(fetch = FetchType.LAZY)

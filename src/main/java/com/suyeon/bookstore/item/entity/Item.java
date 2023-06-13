@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 public class Item {
     @Id
     @GeneratedValue
-    @Column(name = "itemId")
+    @Column(name = "item_id")
     private Long itemId;
 
-    @Column(name = "itemDetail")
+    @Column(name = "item_detail")
     private String itemDetail;
 
-    @Column(name = "itemName")
+    @Column(name = "item_name")
     private String itemName;
 
     @Column(name = "price")

@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class CartItem {
     @Id
     @GeneratedValue
-    @Column(name = "cartId")
+    @Column(name = "cart_id")
     private Long cartId;
 
     @Column(name = "count")

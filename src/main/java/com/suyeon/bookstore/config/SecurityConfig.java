@@ -24,7 +24,9 @@ public class SecurityConfig{
                 .and()//오류 발생 방지
                 .headers()
                 .addHeaderWriter(new XFrameOptionsHeaderWriter(
-                        XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN));
+                        XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
+                .and()
+                .csrf().disable();
 
         return http.build();
     }

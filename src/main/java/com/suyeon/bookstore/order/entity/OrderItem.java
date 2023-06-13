@@ -13,10 +13,10 @@ import lombok.NoArgsConstructor;
 public class OrderItem {
     @Id
     @GeneratedValue
-    @Column(name = "orderItemId")
+    @Column(name = "order_item_id")
     private Long oderItemId;
 
-    @Column(name = "orderPrice")
+    @Column(name = "order_price")
     private int orderPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)

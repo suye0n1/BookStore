@@ -1,5 +1,7 @@
 package com.suyeon.bookstore.member.service;
 
+import com.suyeon.bookstore.exception.ErrorCode;
+import com.suyeon.bookstore.exception.UsernameDuplicationException;
 import com.suyeon.bookstore.member.dto.MemberResponse;
 import com.suyeon.bookstore.member.dto.JoinDto;
 import com.suyeon.bookstore.member.entity.Member;
@@ -9,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -29,14 +32,19 @@ public class MemberService {
                 }).toList();
     }
 
-    public Member createJoin(JoinDto memberDto){
+    public Member createJoin(JoinDto memberDto) {
+        Optional<Member> username = memberRepository.findByUsername(memberDto.getUsername());
+        if( username.isPresent()){  //Todo isPresent말고 orElseThrow로 작성해보기
+            throw new UsernameDuplicationException();
+        }
+
         Member member = Member.builder()
                 .username(memberDto.getUsername())
                 .password(passwordEncoder.encode(memberDto.getPassword()))
                 .name(memberDto.getName())
                 .address(memberDto.getAddress())
                 .build();
-     return memberRepository.save(member);
+        return memberRepository.save(member);
     }
 
 }
