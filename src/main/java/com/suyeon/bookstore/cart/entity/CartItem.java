@@ -1,19 +1,19 @@
 package com.suyeon.bookstore.cart.entity;
 
+
 import com.suyeon.bookstore.item.entity.Item;
 import com.suyeon.bookstore.member.entity.Member;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+
+@NoArgsConstructor(access =  AccessLevel.PROTECTED)
 @Getter
+@Setter
 @Entity
 public class CartItem {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "cart_id")
     private Long cartId;
 

@@ -3,13 +3,11 @@ package com.suyeon.bookstore.order.entity;
 import com.suyeon.bookstore.common.BaseTimeEntity;
 import com.suyeon.bookstore.member.entity.Member;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Setter
 @Entity
 @Table(name = "orders")
 public class Order extends BaseTimeEntity {

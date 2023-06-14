@@ -1,9 +1,8 @@
 package com.suyeon.bookstore.member.service;
 
-import com.suyeon.bookstore.exception.ErrorCode;
 import com.suyeon.bookstore.exception.UsernameDuplicationException;
-import com.suyeon.bookstore.member.dto.MemberResponse;
 import com.suyeon.bookstore.member.dto.JoinDto;
+import com.suyeon.bookstore.member.dto.MemberResponse;
 import com.suyeon.bookstore.member.entity.Member;
 import com.suyeon.bookstore.member.repository.MemberRepository;
 import lombok.AllArgsConstructor;
@@ -34,7 +33,7 @@ public class MemberService {
 
     public Member createJoin(JoinDto memberDto) {
         Optional<Member> username = memberRepository.findByUsername(memberDto.getUsername());
-        if( username.isPresent()){  //Todo isPresent말고 orElseThrow로 작성해보기
+        if(username.isPresent()){
             throw new UsernameDuplicationException();
         }
 
@@ -46,5 +45,4 @@ public class MemberService {
                 .build();
         return memberRepository.save(member);
     }
-
-}
+    }

@@ -2,13 +2,11 @@ package com.suyeon.bookstore.order.entity;
 
 import com.suyeon.bookstore.item.entity.Item;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Setter
 @Entity
 public class OrderItem {
     @Id
