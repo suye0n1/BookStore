@@ -13,6 +13,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity  //모든 요청 URL이 Spring Security의 제어를 받음
 public class SecurityConfig{
 
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {   //인증되지 않은 요청 허락
         http.authorizeHttpRequests().requestMatchers(

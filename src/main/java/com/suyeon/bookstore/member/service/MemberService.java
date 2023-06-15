@@ -1,5 +1,7 @@
 package com.suyeon.bookstore.member.service;
 
+import com.suyeon.bookstore.config.JwtProvider;
+import com.suyeon.bookstore.exception.LoginFailException;
 import com.suyeon.bookstore.exception.UsernameDuplicationException;
 import com.suyeon.bookstore.member.dto.JoinDto;
 import com.suyeon.bookstore.member.dto.MemberResponse;
@@ -18,6 +20,7 @@ public class MemberService {
 
     private MemberRepository memberRepository;
     private PasswordEncoder passwordEncoder;
+    private JwtProvider jwtProvider;
 
     public List<MemberResponse> getAllMembers(){
         return memberRepository.findAll()
@@ -45,4 +48,16 @@ public class MemberService {
                 .build();
         return memberRepository.save(member);
     }
+
+    public String login(String username, String password){
+        Member member = memberRepository.findByUsername(username).orElseThrow(()->
+                    new LoginFailException());
+
+            if(!passwordEncoder.matches(password, member.getPassword())){
+            throw new LoginFailException();
+        }
+
+        return jwtProvider.createToken(member.getUsername());
+    }
+
     }

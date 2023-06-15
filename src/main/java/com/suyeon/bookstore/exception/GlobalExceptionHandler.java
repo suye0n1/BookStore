@@ -31,4 +31,10 @@ public class GlobalExceptionHandler {
         return
                 ResponseEntity.internalServerError().body(ErrorResponse.from(ErrorCode.INTERNAL_SERVER_ERROR));
     }
+
+    @ExceptionHandler(LoginFailException.class)
+    public ResponseEntity<ErrorResponse> LoginFailException(UsernameDuplicationException ex){
+        ErrorResponse response = ErrorResponse.from(ex.getErrorCode());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
 }
