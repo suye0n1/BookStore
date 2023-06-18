@@ -21,7 +21,6 @@ import java.util.Map;
 public class MemberController {
 
     private MemberService memberService;
-    private MemberRepository memberRepository;
 
     @GetMapping("/api/members")
     public List<MemberResponse> getAllBoards(){
@@ -34,11 +33,12 @@ public class MemberController {
 
     }
 
-  @PostMapping("/auth/login")
+    @PostMapping("/auth/login")
     public String login(@Valid @RequestBody LoginDto loginDto){
       String username = loginDto.getUsername();
       String password = loginDto.getPassword();
       return memberService.login(username,password);
+
     }
 
 

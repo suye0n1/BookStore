@@ -1,5 +1,6 @@
 package com.suyeon.bookstore.config;
 
+import com.suyeon.bookstore.jwt.JwtProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,6 +13,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity  //모든 요청 URL이 Spring Security의 제어를 받음
 public class SecurityConfig{
+
+    private JwtProvider jwtProvider;
+
+    //authenticationManager를 Bean으로 등록
 
 
     @Bean

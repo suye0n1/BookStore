@@ -1,6 +1,6 @@
 package com.suyeon.bookstore.member.service;
 
-import com.suyeon.bookstore.config.JwtProvider;
+import com.suyeon.bookstore.jwt.JwtProvider;
 import com.suyeon.bookstore.exception.LoginFailException;
 import com.suyeon.bookstore.exception.UsernameDuplicationException;
 import com.suyeon.bookstore.member.dto.JoinDto;
@@ -57,7 +57,8 @@ public class MemberService {
             throw new LoginFailException();
         }
 
-        return jwtProvider.createToken(member.getUsername());
+
+        return null;
     }
 
     }
