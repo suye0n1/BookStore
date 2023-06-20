@@ -18,18 +18,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
   @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorResponse>
-    accessDeniedExceptionHandler(AccessDeniedException ex)
+    public ResponseEntity<ErrorResponse> accessDeniedExceptionHandler(AccessDeniedException ex)
     {
-        return
-                ResponseEntity.status(HttpStatus.FORBIDDEN).body(ErrorResponse.from(ErrorCode.FORBIDDEN));
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ErrorResponse.from(ErrorCode.FORBIDDEN));
     }
-@ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse>
-    runtimeExceptionHandler(RuntimeException ex) {
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorResponse> runtimeExceptionHandler(RuntimeException ex) {
         log.error(ex.getMessage(), ex);
-        return
-                ResponseEntity.internalServerError().body(ErrorResponse.from(ErrorCode.INTERNAL_SERVER_ERROR));
+        return ResponseEntity.internalServerError().body(ErrorResponse.from(ErrorCode.INTERNAL_SERVER_ERROR));
     }
 
     @ExceptionHandler(LoginFailException.class)

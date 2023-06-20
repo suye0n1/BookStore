@@ -3,14 +3,14 @@ package com.suyeon.bookstore.member.service;
 import com.suyeon.bookstore.jwt.JwtProvider;
 import com.suyeon.bookstore.exception.LoginFailException;
 import com.suyeon.bookstore.exception.UsernameDuplicationException;
-import com.suyeon.bookstore.member.dto.JoinDto;
+import com.suyeon.bookstore.member.dto.LoginResponse;
+import com.suyeon.bookstore.member.dto.JoinRequest;
 import com.suyeon.bookstore.member.dto.MemberResponse;
 import com.suyeon.bookstore.member.entity.Member;
 import com.suyeon.bookstore.member.repository.MemberRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,42 +37,35 @@ public class MemberService {
                 }).toList();
     }
 
-    public Member createJoin(JoinDto memberDto) {
-        Optional<Member> username = memberRepository.findByUsername(memberDto.getUsername());
+    public Member join(JoinRequest joinRequest) {
+        Optional<Member> username = memberRepository.findByUsername(joinRequest.getUsername());
         if(username.isPresent()){
             throw new UsernameDuplicationException();
         }
 
         Member member = Member.builder()
-                .username(memberDto.getUsername())
-                .password(passwordEncoder.encode(memberDto.getPassword()))
-                .name(memberDto.getName())
-                .address(memberDto.getAddress())
+                .username(joinRequest.getUsername())
+                .password(passwordEncoder.encode(joinRequest.getPassword()))
+                .name(joinRequest.getName())
+                .address(joinRequest.getAddress())
                 .build();
         return memberRepository.save(member);
     }
 
-    public String login(String username, String password){
-        Member member = memberRepository.findByUsername(username).orElseThrow(()->
-                    new LoginFailException());
+    public LoginResponse login(String username, String password){
+        Member member = memberRepository.findByUsername(username).orElseThrow(()-> new LoginFailException());
 
             if(!passwordEncoder.matches(password, member.getPassword())){
             throw new LoginFailException();
         }
 
         // Access Token 생성
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getUsername(), member.getPassword());
-        String accessToken = jwtProvider.generateAccessToken(authentication);
+            Authentication authentication = new UsernamePasswordAuthenticationToken(member.getUsername(), member.getPassword());
+            String accessToken = jwtProvider.generateAccessToken(authentication);
 
         // Refresh Token 생성
         String refreshToken = jwtProvider.generateRefreshToken(authentication);
 
-        // Refresh Token 저장
-        member.setRefreshToken(refreshToken);
-        memberRepository.save(member);
-
-        return accessToken;
-
+        return new LoginResponse(accessToken, refreshToken);
     }
-
-    }
+}

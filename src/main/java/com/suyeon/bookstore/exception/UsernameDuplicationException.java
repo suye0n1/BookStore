@@ -15,5 +15,4 @@ public class UsernameDuplicationException extends RuntimeException{
         super(message);
         this.errorCode = errorCode;
     }
-
 }

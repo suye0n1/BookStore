@@ -28,18 +28,13 @@ public class Member {
     @Column(name = "address", nullable = false)
     private Address address;
 
-    @Column(name = "refresh_token")
-    private String refreshToken;
-
     @Builder
-    public Member (Long id, String username,String password, String name, Address address, String refreshToken){
+    public Member (Long id, String username,String password, String name, Address address){
         this.id = id;
         this.username = username;
         this.password = password;
         this.name = name;
         this.address = address;
-        this.refreshToken = refreshToken;
+
     }
-
-
 }

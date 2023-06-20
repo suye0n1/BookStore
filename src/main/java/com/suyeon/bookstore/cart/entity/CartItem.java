@@ -28,9 +28,5 @@ public class CartItem {
     @JoinColumn(name = "item_id")
     private Item item;
 
-    @Builder
-    private CartItem (Long cartId, int count){
-        this.cartId = cartId;
-        this.count = count;
-    }
+
 }

@@ -21,8 +21,6 @@ public class SecurityConfig{
     private JwtProvider jwtProvider;
 
     //authenticationManager를 Bean으로 등록
-
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {   //인증되지 않은 요청 허락
         http.authorizeHttpRequests().requestMatchers(

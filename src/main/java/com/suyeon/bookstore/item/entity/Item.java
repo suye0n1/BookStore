@@ -22,13 +22,4 @@ public class Item {
     @Column(name = "price")
     private int price;
 
-    @Builder
-    private Item (Long itemId, String itemDetail, String itemName, int price){
-        this.itemId = itemId;
-        this.itemDetail = itemDetail;
-        this.itemName = itemName;
-        this.price = price;
-    }
-
-
 }
