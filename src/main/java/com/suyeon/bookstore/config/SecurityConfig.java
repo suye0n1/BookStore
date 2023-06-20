@@ -5,10 +5,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import static javax.management.Query.and;
+
 
 @Configuration
 @EnableWebSecurity  //모든 요청 URL이 Spring Security의 제어를 받음
@@ -25,7 +29,6 @@ public class SecurityConfig{
                         new AntPathRequestMatcher("/**")).permitAll()
                 .and()//csrf 검증 예외 처리
               .csrf().disable();
-
         return http.build();
     }
 

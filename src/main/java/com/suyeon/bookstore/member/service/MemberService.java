@@ -8,6 +8,9 @@ import com.suyeon.bookstore.member.dto.MemberResponse;
 import com.suyeon.bookstore.member.entity.Member;
 import com.suyeon.bookstore.member.repository.MemberRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -57,8 +60,19 @@ public class MemberService {
             throw new LoginFailException();
         }
 
+        // Access Token 생성
+        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getUsername(), member.getPassword());
+        String accessToken = jwtProvider.generateAccessToken(authentication);
 
-        return null;
+        // Refresh Token 생성
+        String refreshToken = jwtProvider.generateRefreshToken(authentication);
+
+        // Refresh Token 저장
+        member.setRefreshToken(refreshToken);
+        memberRepository.save(member);
+
+        return accessToken;
+
     }
 
     }
