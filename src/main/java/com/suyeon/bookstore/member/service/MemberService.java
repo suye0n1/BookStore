@@ -9,8 +9,6 @@ import com.suyeon.bookstore.member.dto.MemberResponse;
 import com.suyeon.bookstore.member.entity.Member;
 import com.suyeon.bookstore.member.repository.MemberRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -53,18 +51,17 @@ public class MemberService {
     }
 
     public LoginResponse login(String username, String password){
-        Member member = memberRepository.findByUsername(username).orElseThrow(()-> new LoginFailException());
+        Member member = memberRepository.findByUsername(username).orElseThrow(LoginFailException::new);
 
             if(!passwordEncoder.matches(password, member.getPassword())){
             throw new LoginFailException();
         }
 
         // Access Token 생성
-            Authentication authentication = new UsernamePasswordAuthenticationToken(member.getUsername(), member.getPassword());
-            String accessToken = jwtProvider.generateAccessToken(authentication);
+            String accessToken = jwtProvider.generateAccessToken(member.getUsername());
 
         // Refresh Token 생성
-        String refreshToken = jwtProvider.generateRefreshToken(authentication);
+        String refreshToken = jwtProvider.generateRefreshToken(member.getUsername());
 
         return new LoginResponse(accessToken, refreshToken);
     }

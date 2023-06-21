@@ -9,12 +9,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import java.io.IOException;
 
-
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends OncePerRequestFilter { //권한 확인
+public class JwtAuthenticationFilter extends OncePerRequestFilter { //가장 먼저 실행되는 곳
     private JwtProvider jwtProvider;
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String BEARER_PREFIX = "Bearer ";

@@ -3,15 +3,14 @@ package com.suyeon.bookstore.config;
 import com.suyeon.bookstore.jwt.JwtProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import static javax.management.Query.and;
 
 
 @Configuration
@@ -20,14 +19,17 @@ public class SecurityConfig{
 
     private JwtProvider jwtProvider;
 
-    //authenticationManager를 Bean으로 등록
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {   //인증되지 않은 요청 허락
-        http.authorizeHttpRequests().requestMatchers(
-                        new AntPathRequestMatcher("/**")).permitAll()
-                .and()//csrf 검증 예외 처리
-              .csrf().disable();
-        return http.build();
+
+        return http
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeHttpRequests()//.authorizeRequestsr가  .authorizeHttpRequests로
+                .requestMatchers("/auth/**").permitAll()//.antMatchers()가 .requestMatchers로
+                .and()
+                .getOrBuild();
     }
 
     @Bean
