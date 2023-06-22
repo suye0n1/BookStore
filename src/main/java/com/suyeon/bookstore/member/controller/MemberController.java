@@ -4,6 +4,7 @@ package com.suyeon.bookstore.member.controller;
 import com.suyeon.bookstore.member.dto.*;
 import com.suyeon.bookstore.member.entity.Member;
 import com.suyeon.bookstore.member.service.MemberService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -28,10 +29,10 @@ public class MemberController {
     }
 
     @PostMapping("/auth/login")
-    public LoginResponse login(@Valid @RequestBody LoginRequest loginRequest){
+    public LoginResponse login(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response){
       String username = loginRequest.getUsername();
       String password = loginRequest.getPassword();
-      return memberService.login(username,password);
+      return memberService.login(username,password, response);
 
     }
 

@@ -8,6 +8,8 @@ import com.suyeon.bookstore.member.dto.JoinRequest;
 import com.suyeon.bookstore.member.dto.MemberResponse;
 import com.suyeon.bookstore.member.entity.Member;
 import com.suyeon.bookstore.member.repository.MemberRepository;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -50,7 +52,7 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
-    public LoginResponse login(String username, String password){
+    public LoginResponse login(String username, String password, HttpServletResponse response){
         Member member = memberRepository.findByUsername(username).orElseThrow(LoginFailException::new);
 
             if(!passwordEncoder.matches(password, member.getPassword())){
@@ -58,10 +60,17 @@ public class MemberService {
         }
 
         // Access Token 생성
-            String accessToken = jwtProvider.generateAccessToken(member.getUsername());
+            String accessToken = jwtProvider.generateAccessToken(member.getUsername(), member.getPassword());
 
         // Refresh Token 생성
-        String refreshToken = jwtProvider.generateRefreshToken(member.getUsername());
+        String refreshToken = jwtProvider.generateRefreshToken(member.getUsername(), member.getPassword());
+
+        //리프레시토큰 쿠키에 담기
+        Cookie cookie = new Cookie("refreshToken", refreshToken); //쿠키 생성
+        cookie.setMaxAge(1000*60*60*24*7); //쿠키 유지 기간
+        cookie.setHttpOnly(true); //javascript코드 접근 불가능
+        member.setUsername(username);
+        response.addCookie(cookie);
 
         return new LoginResponse(accessToken, refreshToken);
     }

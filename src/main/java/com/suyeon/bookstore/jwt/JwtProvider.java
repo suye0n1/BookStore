@@ -42,24 +42,25 @@ public class JwtProvider {
     }
 
     // 토큰 생성
-    public String generateToken(String username, Long tokenValidTime) {
+    public String generateToken(String username, String password, Long tokenValidTime) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + tokenValidTime);
         return Jwts.builder()
                 .setHeaderParam("type","jwt") //type이 jwt임을 설정
                 .claim("username", username) //payload에 담길 데이터 입력
+                .claim("password", password)
                 .setIssuedAt(now) //발급시간(현재시간)
                 .setExpiration(expiration) //만료 시간
                 .signWith(key,SignatureAlgorithm.HS256) //서명 알고리즘 = HS256(비밀키 별도 클래스에서 관리)
                 .compact(); //JWT 토큰 생성
     }
 
-    public String generateAccessToken(String username){
-        return generateToken(username, accessTokenValidTime);
+    public String generateAccessToken(String username, String password){
+        return generateToken(username, password, accessTokenValidTime);
     }
 
-    public String generateRefreshToken(String username){
-        return generateToken(username, refreshTokenValidTime);
+    public String generateRefreshToken(String username, String password){
+        return generateToken(username, password, refreshTokenValidTime);
     }
 
     public Authentication getAuthentication(String accessToken) {
@@ -76,10 +77,11 @@ public class JwtProvider {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        String username = claims.getSubject();
-        User principal = new User(username, "", authorities);
+        String username = claims.get("username", String.class);
+        String password = claims.get("password", String.class);
+        User principal = new User(username, password, authorities);
 
-        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+        return new UsernamePasswordAuthenticationToken(principal, password, authorities);
 
     }
 
