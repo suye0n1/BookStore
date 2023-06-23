@@ -9,6 +9,7 @@ import lombok.*;
 @Setter
 @Entity
 public class OrderItem {
+
     @Id
     @GeneratedValue
     @Column(name = "order_item_id")

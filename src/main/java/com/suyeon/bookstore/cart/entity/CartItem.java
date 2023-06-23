@@ -4,8 +4,10 @@ package com.suyeon.bookstore.cart.entity;
 import com.suyeon.bookstore.item.entity.Item;
 import com.suyeon.bookstore.member.entity.Member;
 import jakarta.persistence.*;
-import lombok.*;
-
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor(access =  AccessLevel.PROTECTED)
 @Getter
@@ -13,7 +15,7 @@ import lombok.*;
 @Entity
 public class CartItem {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     @Column(name = "cart_id")
     private Long cartId;
 

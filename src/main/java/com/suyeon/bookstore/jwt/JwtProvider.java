@@ -3,7 +3,6 @@ package com.suyeon.bookstore.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -77,11 +76,9 @@ public class JwtProvider {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        String username = claims.get("username", String.class);
-        String password = claims.get("password", String.class);
-        User principal = new User(username, password, authorities);
+        User principal = new User(claims.getSubject(), "", authorities);
 
-        return new UsernamePasswordAuthenticationToken(principal, password, authorities);
+        return new UsernamePasswordAuthenticationToken(principal, accessToken, authorities);
 
     }
 
