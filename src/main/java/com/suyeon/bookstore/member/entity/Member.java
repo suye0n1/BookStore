@@ -2,6 +2,7 @@ package com.suyeon.bookstore.member.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.apache.catalina.User;
 
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

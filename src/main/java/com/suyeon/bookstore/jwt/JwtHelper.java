@@ -1,6 +1,7 @@
 package com.suyeon.bookstore.jwt;
 
 
+import com.suyeon.bookstore.exception.UnauthorizedException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import jakarta.annotation.PostConstruct;
@@ -12,7 +13,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.security.Key;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -22,9 +22,8 @@ import org.springframework.stereotype.Component;
 import javax.crypto.spec.SecretKeySpec;
 
 @Slf4j
-@RequiredArgsConstructor
 @Component
-public class JwtProvider {
+public class JwtHelper {
 
   //  private String secretKey;
 
@@ -41,45 +40,36 @@ public class JwtProvider {
     }
 
     // 토큰 생성
-    public String generateToken(String username, String password, Long tokenValidTime) {
+    public String generateToken(Long memberId, Long tokenValidTime) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + tokenValidTime);
         return Jwts.builder()
                 .setHeaderParam("type","jwt") //type이 jwt임을 설정
-                .claim("username", username) //payload에 담길 데이터 입력
-                .claim("password", password)
+                .setSubject(String.valueOf(memberId)) //principal에 넣은 username 리턴
+                .claim("memberId", String.valueOf(memberId))
                 .setIssuedAt(now) //발급시간(현재시간)
                 .setExpiration(expiration) //만료 시간
                 .signWith(key,SignatureAlgorithm.HS256) //서명 알고리즘 = HS256(비밀키 별도 클래스에서 관리)
                 .compact(); //JWT 토큰 생성
     }
 
-    public String generateAccessToken(String username, String password){
-        return generateToken(username, password, accessTokenValidTime);
+    public String generateAccessToken(Long memberId){
+        return generateToken(memberId, accessTokenValidTime);
     }
 
-    public String generateRefreshToken(String username, String password){
-        return generateToken(username, password, refreshTokenValidTime);
+    public String generateRefreshToken(Long memberId){
+        return generateToken(memberId, refreshTokenValidTime);
     }
 
     public Authentication getAuthentication(String accessToken) {
+        if (!validateToken(accessToken)) {
+            throw new UnauthorizedException("토큰 인증 실패");
+        }
+
         // 토큰 복호화
         Claims claims = parseClaims(accessToken);
 
-        if (claims.get(AUTHORITIES_KEY) == null) {
-            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
-        }
-
-        // 클레임에서 권한 정보 가져오기
-        Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
-
-        User principal = new User(claims.getSubject(), "", authorities);
-
-        return new UsernamePasswordAuthenticationToken(principal, accessToken, authorities);
-
+        return new JwtAuthenticationAfter(Long.valueOf(claims.getSubject()));
     }
 
     private Claims parseClaims(String accessToken) {
@@ -105,5 +95,4 @@ public class JwtProvider {
         }
         return false;
     }
-
 }

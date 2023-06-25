@@ -1,6 +1,6 @@
 package com.suyeon.bookstore.member.service;
 
-import com.suyeon.bookstore.jwt.JwtProvider;
+import com.suyeon.bookstore.jwt.JwtHelper;
 import com.suyeon.bookstore.exception.LoginFailException;
 import com.suyeon.bookstore.exception.UsernameDuplicationException;
 import com.suyeon.bookstore.member.dto.LoginResponse;
@@ -11,6 +11,10 @@ import com.suyeon.bookstore.member.repository.MemberRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +23,12 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class MemberService {
+public class MemberService{
 
     private MemberRepository memberRepository;
     private PasswordEncoder passwordEncoder;
-    private JwtProvider jwtProvider;
+    private JwtHelper jwtHelper;
+    private AuthenticationManagerBuilder authenticationManagerBuilder;
 
     public List<MemberResponse> getAllMembers(){
         return memberRepository.findAll()
@@ -55,17 +60,18 @@ public class MemberService {
     public LoginResponse login(String username, String password, HttpServletResponse response){
         Member member = memberRepository.findByUsername(username).orElseThrow(LoginFailException::new);
 
-            if(!passwordEncoder.matches(password, member.getPassword())){
+        if(!passwordEncoder.matches(password, member.getPassword())){
             throw new LoginFailException();
         }
 
-        // Access Token 생성
-            String accessToken = jwtProvider.generateAccessToken(member.getUsername(), member.getPassword());
+       // Access Token 생성
+        String accessToken = jwtHelper.generateAccessToken(member.getId());
 
         // Refresh Token 생성
-        String refreshToken = jwtProvider.generateRefreshToken(member.getUsername(), member.getPassword());
+        String refreshToken = jwtHelper.generateRefreshToken(member.getId());
 
-        //리프레시토큰 쿠키에 담기
+        // 리프레시토큰 쿠키에 담기
+        // 옵셔널한 부분
         Cookie cookie = new Cookie("refreshToken", refreshToken); //쿠키 생성
         cookie.setMaxAge(1000*60*60*24*7); //쿠키 유지 기간
         cookie.setHttpOnly(true); //javascript코드 접근 불가능
@@ -74,4 +80,5 @@ public class MemberService {
 
         return new LoginResponse(accessToken, refreshToken);
     }
+
 }
